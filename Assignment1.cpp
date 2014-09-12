@@ -287,14 +287,14 @@ void userSetDate(timeAndDate &programClock)
     cout << "Would you like to set the day, the month, the year, or all three? " << endl
          << "1 - day" << endl
          << "2 - month" << endl
-         << "3 - year" << endl
-         << "4 - day,month,and year ";
+         << "3 - year" << endl;
+         //<< "4 - day,month,and year ";
     cin >> userChoice;
     cout << endl;
 
-    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4)
+    if(userChoice != 1 && userChoice != 2 && userChoice != 3)// && userChoice != 4)
     {
-        cout << endl << "Error 004: Value cannot equal anything other than 1,2,3, or 4" << endl;
+        cout << endl << "Error 004: Value cannot equal anything other than 1,2,3" << endl;//, or 4" << endl;
         userSetDate(programClock);
         return;
     }
