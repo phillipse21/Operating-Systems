@@ -1,7 +1,5 @@
 #include "libraries.h"
 
-using namespace std;
-
 timeAndDate::timeAndDate(time_t initialTime,tm * timeInfo)
 {
     date = timeInfo->tm_mday;
@@ -115,14 +113,24 @@ int printOpeningMenu(timeAndDate clock)
          << "1 - Change time" << endl
          << "2 - Change date" << endl
          << "3 - Print directories" << endl
-         << "4 - Help" << endl
-         << "5 - Exit" << endl;
+         //<< "4 - CreatePCB " << endl
+         //<< "5 - DeletePCB" << endl
+         //<< "6 - Block" << endl
+         //<< "7 - Unblock" << endl
+         << "4 - Suspend" << endl
+         << "5 - Resume" << endl
+         << "6 - Set priority" << endl
+         << "7 - Show PCB" << endl
+         << "8 - Show all" << endl
+         << "9 - Show ready" << endl
+         << "10 - Show blocked" << endl
+         << "11 - Help" << endl
+         << "12 - Exit" << endl;
     cin >> userChoice;
 
-    if(userChoice != 1 && userChoice != 2 && userChoice != 3 &&
-       userChoice != 4 && userChoice != 5)
+    if(userChoice < 1 || userChoice > 12)
     {
-        cout << "Error 012: Please select 1,2,3,4, or 5" << endl;
+        cout << "Error 016: Please select 1,2,3,4,5,6,7,8,9,10,11,12" << endl;
         printOpeningMenu(clock);
     }
     else
@@ -568,32 +576,45 @@ void printHelpScreen(timeAndDate &programClock)
          << "1 - Changing the time" << endl
          << "2 - Changing the date" << endl
          << "3 - Printing the files in the directory" << endl
-         << "4 - Back to main menu ";
+         //<< "4 - CreatePCB " << endl
+         //<< "5 - DeletePCB" << endl
+         //<< "6 - Block" << endl
+         //<< "7 - Unblock" << endl
+         << "4 - Suspend" << endl
+         << "5 - Resume" << endl
+         << "6 - Set priority" << endl
+         << "7 - Show PCB" << endl
+         << "8 - Show all" << endl
+         << "9 - Show ready" << endl
+         << "10 - Show blocked" << endl
+         << "11 - Back to main menu ";
     cin >> userChoice;
 
-    if(userChoice != 1 && userChoice != 2 && userChoice != 3 && userChoice != 4)
+    if(userChoice < 1 || userChoice > 16)
     {
-        cout << "Error 004: Value cannot equal anything other than 1,2,3, or 4" << endl;
+        cout << "Error 017: Value cannot equal anything other than 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15" << endl;
         printHelpScreen(programClock);
     }
     else
     {
-        if(userChoice == 1)
+        switch(userChoice)
         {
-            cout << "This command can be used if the time shown at the top of the menu " << endl
+            case(1):
+            {
+                cout << "This command can be used if the time shown at the top of the menu " << endl
                  << "is not correct. Option 1 is selected if both the hour and minutes " << endl
                  << "displayed are incorrect, option 2 is selected if only the hour is " << endl
                  << "incorrect, and option 3 is selected if the minutes are incorrect " << endl
                  << "                          Enter 0 to return to previous screen" << endl;
-            cin >> userChoice;
+                cin >> userChoice;
 
-            if(userChoice == 0)
-                printHelpScreen(programClock);
-
-        }
-        else if(userChoice == 2)
-        {
-            cout << "This command is to be used if the date shown at the top of the menu " << endl
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                break;
+            }
+            case(2):
+            {
+                cout << "This command is to be used if the date shown at the top of the menu " << endl
                  << "is not correct. Option 1 is selected if only the day needs to be changed, " << endl
                  << "option 2 is selected if only the month needs to be changed, option 3 is " << endl
                  << "selected if only the year needs to be changed, and option 4 is selected if" << endl
@@ -601,22 +622,159 @@ void printHelpScreen(timeAndDate &programClock)
                  << "                          Enter 0 to return to previous screen" << endl;
                 cin >> userChoice;
 
-            if(userChoice == 0)
-                printHelpScreen(programClock);
-        }
-        else if(userChoice == 3)
-        {
-            cout << "This command prints the name of all files used by this program to the screen " << endl
-                 << "                          Enter 0 to return to previous screen" << endl;
-            cin >> userChoice;
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                break;
+            }
+            case(3):
+            {
+                cout << "This command prints the name of all files used by this program to the screen " << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
 
-            if(userChoice == 0)
-                printHelpScreen(programClock);
-        }
-        else if(userChoice == 4)
-        {
-            system("CLS");
-            printOpeningMenu(programClock);
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            /*
+            case(4)://create PCB
+            {
+                cout << "This command allocates and assigns a new PCB with the user specified name, " << endl
+                     << "class,and priority." << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(5)://delete PCB
+            {
+                cout << "This command allows the user to enter a process name of a PCB they wish to delete" << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(6)://Block
+            {
+                cout << "This command allows the user to enter the process name of a desired PCB and move it from the" << endl
+                     << "ready queue and putting it in the blocked queue" << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+
+            }
+            case(7)://unblock
+            {
+                cout << "Allows the user to enter the name of a desired PCB and move it from the blocked queue and into " << endl
+                     << "the ready queue." << endl
+                     << "  Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                {
+                    printHelpScreen(programClock);
+                    break;
+                }
+                break;
+            }
+            */
+            case(4)://suspend
+            {
+                cout << "This command allows the user to enter a process name of a desired PCB and puts said PCB into " << endl
+                     << "a suspended state." << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(5)://resume
+            {
+                cout << "This command allows the user to change a PCB's state from suspended to not suspended." << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(6)://set priority
+            {
+                cout << "This command allows the user to enter a selected PCB's process name and set a new priority." << endl
+                     << "The new priority must be within the range of -127 to +128." << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(7)://show PCB
+            {
+                cout << "This command prints all information from a user defined PCB." << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                {
+                    printHelpScreen(programClock);
+                    break;
+                }
+                break;
+            }
+            case(8)://show all
+            {
+                cout << "This command prints all information for every PCB in every list" << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(9)://show ready
+            {
+                cout << "This command prints all information for every PCB in the ready queue" << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                    break;
+                break;
+            }
+            case(10)://show blocked
+            {
+                cout << "This command prints all information for every PCB in the blocked list" << endl
+                     << "                          Enter 0 to return to previous screen" << endl;
+                cin >> userChoice;
+
+                if(userChoice == 0)
+                    printHelpScreen(programClock);
+                //    break;
+                break;
+            }
+            case(11):
+            {
+                system("CLS");
+                printOpeningMenu(programClock);
+                break;
+            }
         }
     }
 }

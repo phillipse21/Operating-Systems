@@ -3,7 +3,6 @@
 
 #include "libraries.h"
 
-using namespace std;
 
 class timeAndDate
 {
