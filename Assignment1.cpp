@@ -7,6 +7,7 @@ timeAndDate::timeAndDate(time_t initialTime,tm * timeInfo)
     year = timeInfo->tm_year;
     hour = timeInfo->tm_hour;
     minute = timeInfo->tm_min;
+    second = timeInfo->tm_sec;
 
     if(hour > 12)
         hour = hour - 12;
@@ -59,6 +60,11 @@ void timeAndDate::setYear(int year)
     this -> year = year;
 }
 
+void timeAndDate::setSecond(int second)
+{
+    this -> second = second;
+}
+
 //return hour
 time_t timeAndDate::getHour()
 {
@@ -89,6 +95,12 @@ time_t timeAndDate::getYear()
     return year;
 }
 
+time_t timeAndDate::getSecond()
+{
+    return second;
+}
+
+
 //print welcome screen
 void printWelcomeScreen()
 {
@@ -113,17 +125,20 @@ int printOpeningMenu(timeAndDate clock)
          << "1 - Change time" << endl
          << "2 - Change date" << endl
          << "3 - Print directories" << endl
-         //<< "4 - CreatePCB " << endl
-         //<< "5 - DeletePCB" << endl
-         //<< "6 - Block" << endl
-         //<< "7 - Unblock" << endl
-         << "4 - Suspend" << endl
-         << "5 - Resume" << endl
-         << "6 - Set priority" << endl
-         << "7 - Show PCB" << endl
-         << "8 - Show all" << endl
-         << "9 - Show ready" << endl
-         << "10 - Show blocked" << endl
+         << "4 - Full Knowledge Shortest Job First" << endl
+         << "5 - First In First Out" << endl
+         << "6 - Shortest Time To Completion" << endl
+         << "7 - Fixed Priority Pre-Emptive Scheduling" << endl
+         << "8 - Round-Robin Scheduling" << endl
+         << "9 - Multilevel Feedback Queue" << endl
+         << "10 - Lottery Scheduling" << endl
+       //  << "4 - Suspend" << endl
+        // << "5 - Resume" << endl
+        // << "6 - Set priority" << endl
+      //   << "7 - Show PCB" << endl
+    //     << "8 - Show all" << endl
+  //       << "9 - Show ready" << endl
+//         << "10 - Show blocked" << endl
          << "11 - Help" << endl
          << "12 - Exit" << endl;
     cin >> userChoice;
@@ -147,6 +162,8 @@ void incrementTime(timeAndDate clock,tm * &timeInfo,time_t initialTime)
     clock.setDay(timeInfo->tm_hour);
     clock.setMonth(timeInfo->tm_mon);
     clock.setYear(timeInfo->tm_year);
+    clock.setSecond(timeInfo->tm_sec);
+
 }
 //prints time variables from timeAndDate object
 void printTime(timeAndDate clock)
@@ -154,13 +171,14 @@ void printTime(timeAndDate clock)
     if(clock.getHour() > 12)
         clock.setHour(clock.getHour()-12);
 
+
     if(clock.getMinute() > 9)
     {
-        cout << clock.getHour() << ":" << clock.getMinute() << endl;
+        cout << clock.getHour() << ":" << clock.getMinute() << ":" << clock.getSecond() << endl;
     }
     else
     {
-       cout << clock.getHour() << ":0" << clock.getMinute() << endl;
+       cout << clock.getHour() << ":0" << clock.getMinute() << ":" << clock.getSecond() << endl;
     }
 }
 

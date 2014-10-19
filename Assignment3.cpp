@@ -27,6 +27,7 @@ void shortestJobFirst(PCBQueue* &readyQueue)
         }
         iFile.close();
     }
+
     fileDataToPCB(readyQueue,fileData);
 
 }
@@ -168,15 +169,20 @@ void fileDataToPCB(PCBQueue* &readyQueue, vector <string> fileData)
         }
     }
 
+    system("CLS");
+
     PCBStruct* traversePtr = readyQueue->getHeadNodePtr()->getNextPtr();
     while(traversePtr->getNextPtr() != readyQueue->getTailNodePtr())
     {
-        oFile << traversePtr->getProcessName();
-        oFile << ":   " << traversePtr->getTimeRemaining() << endl;
+        cout << traversePtr->getProcessName();
+        cout << ":   " << traversePtr->getTimeRemaining() << endl;
         traversePtr = traversePtr->getNextPtr();
     }
-}
+    cout << endl << endl << endl;
+    getchar();
 
+    ReadytoRunning(readyQueue);
+}
 
 void intTimeRemaining(vector <int> &timeRemainingVector)
 {
@@ -221,5 +227,43 @@ void orderedInsert(PCBQueue* &readyQueue, PCBStruct* &newPCB)
         {
             readyQueue->addNodeBefore(newPCB,traversePtr);
         }
+    }
+}
+
+void ReadytoRunning(PCBQueue* &readyQueue)
+{
+    PCBStruct* traversePtr = readyQueue->getHeadNodePtr()->getNextPtr();
+    PCBStruct* nextPtr = NULL;
+    int timeCounter = traversePtr->getTimeRemaining();
+
+    while(traversePtr != readyQueue->getTailNodePtr())
+    {
+        timeCounter = traversePtr->getTimeRemaining();
+        for(int i = traversePtr->getTimeRemaining(); i > 0; i--)
+        {
+            timeCounter--;
+            traversePtr->setTimeRemaining(timeCounter);
+            Sleep(1000);
+            printWithTimeRemaining(readyQueue);
+        }
+        nextPtr = traversePtr->getNextPtr();
+        readyQueue->getHeadNodePtr()->setNextPtr(nextPtr);
+        nextPtr->setPrevPtr(readyQueue->getHeadNodePtr());
+
+        traversePtr->setNextPtr(NULL);
+        traversePtr->setPrevPtr(NULL);
+        traversePtr = nextPtr;
+    }
+}
+
+void printWithTimeRemaining(PCBQueue* readyQueue)
+{
+    system("CLS");
+    PCBStruct* traversePtr = readyQueue->getHeadNodePtr();
+    while(traversePtr != readyQueue->getTailNodePtr())
+    {
+        cout << traversePtr->getProcessName() << ": "
+             << traversePtr->getTimeRemaining() << endl;
+        traversePtr = traversePtr->getNextPtr();
     }
 }

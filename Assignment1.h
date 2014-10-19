@@ -15,17 +15,20 @@ public:
     void setDay(int day);
     void setMonth(int month);
     void setYear(int year);
+    void setSecond(int second);
     time_t getHour();
     time_t getMinute();
     time_t getDay();
     time_t getMonth();
     time_t getYear();
+    time_t getSecond();
 private:
     time_t date;
     time_t month;
     time_t year;
     time_t hour;
     time_t minute;
+    time_t second;
 };
 
 

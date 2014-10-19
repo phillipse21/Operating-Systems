@@ -14,6 +14,8 @@ using namespace std;
 #include <dirent.h>
 #include <iomanip>
 #include <sstream>
+#include <windows.h>
+#include <conio.h>
 
 #include "Assignment1.h"
 #include "Assignment2.h"
