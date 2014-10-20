@@ -55,67 +55,79 @@ int main()
                 printDirectoryFiles(programClock);
                 break;
             }
-            case(4)://create PCB
+            case(4)://SJF
             {
                 shortestJobFirst(readyQueue);
 //                createPCB(readyQueue,blockedQueue);
                 break;
             }
-            case(5)://delete PCB
+            case(5)://FIFO
             {
-       //         deletePCB(blockedQueue,readyQueue);
+                firstInFirstOut(readyQueue,timeInfo,initialTime);
                 break;
             }
-            case(6)://Block
+            case(6)://STCF
             {
-         //       block(blockedQueue,readyQueue);
+                shortestTimeToCompletionFirst(readyQueue,timeInfo,initialTime);
                 break;
             }
-            case(7)://unblock
+            case(7)://FPPS
             {
-           //     unblock(blockedQueue,readyQueue);
+                fixedPriorityPreEmptiveScheduling(readyQueue,timeInfo,initialTime);
                 break;
             }
-            case(8)://suspend
+            case(8)://RR
+            {
+                //
+            }
+            case(9)://MLFQ
+            {
+                //
+            }
+            case(10)://LS
+            {
+                //
+            }
+            case(11)://suspend
             {
                 suspend(blockedQueue,readyQueue);
                 break;
             }
-            case(9)://resume
+            case(12)://resume
             {
                 resume(blockedQueue,readyQueue);
                 break;
             }
-            case(10)://set priority
+            case(13)://set priority
             {
                 setPriority(blockedQueue,readyQueue);
                 break;
             }
-            case(11)://show PCB
+            case(14)://show PCB
             {
                 showPCB(blockedQueue,readyQueue);
                 break;
             }
-            case(12)://show all
+            case(15)://show all
             {
                 showAll(blockedQueue,readyQueue);
                 break;
             }
-            case(13)://show ready
+            case(16)://show ready
             {
                 showBlocked(readyQueue);
             }
-            case(14)://show blocked
+            case(17)://show blocked
             {
                 showBlocked(blockedQueue);
                 break;
             }
-            case(15):
+            case(18):
             {
                 printHelpScreen(programClock);
                 break;
             }
-            case(16):
+            case(19):
             {
                 cout << "Are you sure you want to exit?" << endl
                  << "1 - Yes" << endl
