@@ -125,12 +125,12 @@ int printOpeningMenu(timeAndDate clock)
          << "1 - Change time" << endl
          << "2 - Change date" << endl
          << "3 - Print directories" << endl
-         << "4 - SJF" << endl
-         << "5 - FIFO" << endl
-         << "6 - STCF" << endl
-         << "7 - FPPS" << endl
-         << "8 - RR" << endl
-         << "9 - MLFQ" << endl
+         << "4 - Full Knowledge Shortest Job First" << endl
+         << "5 - First In First Out" << endl
+         << "6 - Shortest Time To Completion" << endl
+         << "7 - Fixed Priority Pre-Emptive Scheduling" << endl
+         << "8 - Round-Robin Scheduling" << endl
+         << "9 - Multilevel Feedback Queue" << endl
          << "10 - Lottery Scheduling" << endl
        //  << "4 - Suspend" << endl
         // << "5 - Resume" << endl

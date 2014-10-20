@@ -15,15 +15,5 @@ void ReadytoRunning(PCBQueue* &readyQueue);
 
 void printWithTimeRemaining(PCBQueue* readyQueue);
 
-void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime);
-
-void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime);
-
-void whereToAddSTCF(PCBQueue* &readyQueue, PCBStruct* newPCB,ofstream& oFile, tm * &timeInfo,time_t initialTime);
-
-void fixedPriorityPreEmptiveScheduling(PCBQueue* readyQueue,tm * &timeInfo, time_t initialTime);
-
-void whereToAddFPPS(PCBQueue* &readyQueue, PCBStruct* newPCB,ofstream& oFile, tm * &timeInfo,time_t initialTime);
-
 
 #endif // Assignment3_H
