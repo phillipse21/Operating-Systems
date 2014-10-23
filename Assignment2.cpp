@@ -303,7 +303,7 @@ void PCBQueue::addToEnd(PCBStruct* nodeToAdd)
     nodeToAdd->setNextPtr(tailNodePtr);
     nodeToAdd->setPrevPtr(oldLast);
 }
-
+/*
 
 //create new node & returns pointer to new PCB
 PCBStruct* allocatePCB()
@@ -319,6 +319,7 @@ PCBStruct* allocatePCB()
     else
         return newNode;
 }
+
 
 //Frees all memory associated with a PCB
 void freePCB(PCBStruct* nodeTODelete)
@@ -350,7 +351,7 @@ void  setupPCB(string name,int priority,char appOrSystem,PCBQueue* blocked, PCBQ
 
 
 }
-
+*/
 //searches all queues and all states to find the PCB with that name
 PCBStruct* findSameName(PCBQueue* blocked, PCBQueue* ready, string name)
 {
@@ -416,7 +417,7 @@ PCBStruct* findSameName(PCBQueue* blocked, PCBQueue* ready, string name)
 
     }
 }
-
+/*
 //inserts the given PCB pointer to the specified queue
 void insertPCB(PCBQueue* &blocked, PCBQueue* &ready, PCBStruct* newPCB)
 {
@@ -469,7 +470,7 @@ void removePCB(PCBStruct* nodeToRemove,PCBQueue* &blocked, PCBQueue* &ready)
         return;
     }
 }
-/*
+
 //allocates and sets up a new PCB and inserts it into the ready queue
 void createPCB(PCBQueue* &ready, PCBQueue* &blocked)
 {
@@ -625,9 +626,9 @@ void unblock(PCBQueue* &blocked,PCBQueue* &ready)
         cout << PCBtoChange->getProcessName() << "has been moved from the blocked queue into the ready queue";
     }
 }
+
+
 */
-
-
 //finds a PCB via user-entered process name and changes state to suspended
 void suspend(PCBQueue* &blocked,PCBQueue* &ready)
 {
@@ -762,167 +763,94 @@ void showAll(PCBQueue* blocked,PCBQueue* ready)
     int readySize = ready->getNumOfNodes();
     int counter = 1;
 
-    if(blockedSize < readySize)
+    if(blockedSize == 0)
     {
-        while(readyTraverse->getNextPtr() != NULL)
-        {
-            if(blockedTraverse->getNextPtr() != NULL)
-            {
-                cout << "Blocked PCB " << counter << ": \t\t\t\t Ready PCB " << counter << ":" << endl;
-
-                cout << "Process Name - " << blockedTraverse->getProcessName() << " \t\t\t\t"
-                     << "Process Name - " << readyTraverse->getProcessName() << " \t\t\t\t" << endl;
-
-                cout << "Class - ";
-                if(blockedTraverse->getAppOrSystem() == 'a')
-                    cout << "Application";
-                else
-                    cout << "System";
-
-                cout << " \t\t\t\t Class - ";
-                if(readyTraverse->getAppOrSystem() == 'a')
-                    cout << "Application" << endl;
-                else
-                    cout << "System" << endl;
-
-                cout << "Priority - " << blockedTraverse->getPriority() << " \t\t\t\t"
-                     << "Priority - " << readyTraverse->getPriority() << endl;
-
-                cout << "Running/Ready/Blocked - ";
-                if(blockedTraverse->getRunningReadyBlocked() == 0)
-                    cout << "Running";
-                else if(blockedTraverse->getRunningReadyBlocked() == 1)
-                    cout << "Ready";
-                else
-                    cout << "Blocked";
-
-                cout << " \t\t\t\tRunning/Ready/Blocked - ";
-                if(readyTraverse->getRunningReadyBlocked() == 0)
-                    cout << "Running" << endl;
-                else if(readyTraverse->getRunningReadyBlocked() == 1)
-                    cout << "Ready" << endl;
-                else
-                    cout << "Blocked" << endl;
-
-                cout << "Memory - " << blockedTraverse->getMemoryNeeded() << " \t\t\t\t"
-                     << "Memory - " << readyTraverse->getMemoryNeeded() << endl;
-
-                counter++;
-            }
-            else
-            {
-                cout << "\t\t\t\t\t\t\t\t Blocked PCB " << counter << ": " << endl;
-
-                cout << "\t\t\t\t\t\t\t\\t Process Name - " << blockedTraverse->getProcessName() << endl;
-                cout << "\t\t\t\t\t\t\t\tClass - ";
-                if(blockedTraverse->getAppOrSystem() == 'a')
-                    cout << "Application" << endl;
-                else
-                    cout << "System" << endl;
-
-                cout << "\t\t\t\t\t\t\t\t Priority - " << blockedTraverse->getPriority() << endl;
-
-                cout << "\t\t\t\t\t\t\t\t Memory - " << blockedTraverse->getMemoryNeeded() << endl;
-
-                counter++;
-            }
-        }
+        cout << "The blockedQueue is empty." << endl;
     }
-    else
+    if(readySize == 0)
     {
-         while(blockedTraverse->getNextPtr() != NULL)
-        {
-            if(readyTraverse->getNextPtr() != NULL)
-            {
-                cout << "Blocked PCB " << counter << ": \t\t\t\t Ready PCB " << counter << ":" << endl;
-
-                cout << "Process Name - " << blockedTraverse->getProcessName() << " \t\t\t\t"
-                     << "Process Name - " << readyTraverse->getProcessName() << " \t\t\t\t" << endl;
-
-                cout << "Class - ";
-                if(blockedTraverse->getAppOrSystem() == 'a')
-                    cout << "Application";
-                else
-                    cout << "System";
-
-                cout << " \t\t\t\t Class - ";
-                if(readyTraverse->getAppOrSystem() == 'a')
-                    cout << "Application" << endl;
-                else
-                    cout << "System" << endl;
-
-                cout << "Priority - " << blockedTraverse->getPriority() << " \t\t\t\t"
-                     << "Priority - " << readyTraverse->getPriority() << endl;
-
-                cout << "Running/Ready/Blocked - ";
-                if(blockedTraverse->getRunningReadyBlocked() == 0)
-                    cout << "Running";
-                else if(blockedTraverse->getRunningReadyBlocked() == 1)
-                    cout << "Ready";
-                else
-                    cout << "Blocked";
-
-                cout << " \t\t\t\tRunning/Ready/Blocked - ";
-                if(readyTraverse->getRunningReadyBlocked() == 0)
-                    cout << "Running" << endl;
-                else if(readyTraverse->getRunningReadyBlocked() == 1)
-                    cout << "Ready" << endl;
-                else
-                    cout << "Blocked" << endl;
-
-                cout << "Memory - " << blockedTraverse->getMemoryNeeded() << " \t\t\t\t"
-                     << "Memory - " << readyTraverse->getMemoryNeeded() << endl;
-
-                counter++;
-            }
-            else
-            {
-                cout << "Blocked PCB " << counter << ": " << endl;
-
-                cout << "Process Name - " << blockedTraverse->getProcessName() << endl;
-                cout << "Class - ";
-                if(blockedTraverse->getAppOrSystem() == 'a')
-                    cout << "Application" << endl;
-                else
-                    cout << "System" << endl;
-
-                cout << "Priority - " << blockedTraverse->getPriority() << endl;
-
-                cout << "Memory - " << blockedTraverse->getMemoryNeeded() << endl;
-
-                counter++;
-            }
-        }
+        cout << "The readyQueue is empty." << endl;
     }
-}
 
-//shows all PCBs in blocked queue or ready queue
-void showBlocked(PCBQueue* queueToPrint)
-{
-    PCBStruct* traversePtr = queueToPrint->getHeadNodePtr()->getNextPtr();
-    int counter = 1;
-    while(traversePtr->getNextPtr() != NULL)
+    while(blockedTraverse != blocked->getTailNodePtr())
     {
-        cout << "PCB " << counter << ":" << endl
-             << "Process Name - " << traversePtr->getProcessName() << endl
+        cout << "PCB:" << endl
+             << "Process Name - " << blockedTraverse->getProcessName() << endl
              << "Class - ";
-        if(traversePtr->getAppOrSystem() == 'a')
+
+        if(blockedTraverse->getAppOrSystem() == 'a')
             cout << "Application" << endl;
         else
             cout << "System" << endl;
 
-        cout << "Priority - " << traversePtr->getPriority() << endl;
+        cout << "Priority - " << blockedTraverse->getPriority() << endl;
         cout << "Running/Ready/Blocked - ";
 
-        if(traversePtr->getRunningReadyBlocked() == 0)
+        if(blockedTraverse->getRunningReadyBlocked() == 0)
             cout << "Running" << endl;
-        else if(traversePtr->getRunningReadyBlocked() == 1)
+        else if(blockedTraverse->getRunningReadyBlocked() == 1)
             cout << "Ready" << endl;
         else
             cout << "Blocked" << endl;
 
-        cout << "Memory - " << traversePtr->getMemoryNeeded();
+        cout << "Memory - " << blockedTraverse->getMemoryNeeded() << endl;
 
-        traversePtr = traversePtr->getNextPtr();
+        blockedTraverse = blockedTraverse->getNextPtr();
+    }
+    while(readyTraverse != ready->getTailNodePtr())
+    {
+        cout << "PCB:" << endl
+             << "Process Name - " << readyTraverse->getProcessName() << endl
+             << "Class - ";
+
+        if(readyTraverse->getAppOrSystem() == 'a')
+            cout << "Application" << endl;
+        else
+            cout << "System" << endl;
+
+        cout << "Priority - " << readyTraverse->getPriority() << endl;
+        cout << "Running/Ready/Blocked - ";
+
+        if(readyTraverse->getRunningReadyBlocked() == 0)
+            cout << "Running" << endl;
+        else if(readyTraverse->getRunningReadyBlocked() == 1)
+            cout << "Ready" << endl;
+        else
+            cout << "Blocked" << endl;
+
+        cout << "Memory - " << readyTraverse->getMemoryNeeded() << endl;
+
+        readyTraverse = readyTraverse->getNextPtr();
+    }
+
+}
+
+void showOneQueue(PCBQueue* queueToPrint)
+{
+    PCBStruct* traverseNode = queueToPrint->getHeadNodePtr()->getNextPtr();
+    while(traverseNode != queueToPrint->getTailNodePtr())
+    {
+        cout << "PCB:" << endl
+             << "Process Name - " << traverseNode->getProcessName() << endl
+             << "Class - ";
+
+        if(traverseNode->getAppOrSystem() == 'a')
+            cout << "Application" << endl;
+        else
+            cout << "System" << endl;
+
+        cout << "Priority - " << traverseNode->getPriority() << endl;
+        cout << "Running/Ready/Blocked - ";
+
+        if(traverseNode->getRunningReadyBlocked() == 0)
+            cout << "Running" << endl;
+        else if(traverseNode->getRunningReadyBlocked() == 1)
+            cout << "Ready" << endl;
+        else
+            cout << "Blocked" << endl;
+
+        cout << "Memory - " << traverseNode->getMemoryNeeded() << endl;
+
+        traverseNode = traverseNode->getNextPtr();
     }
 }

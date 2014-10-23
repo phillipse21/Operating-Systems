@@ -3,6 +3,10 @@
 
 #include "libraries.h"
 
+void decrementTime(PCBQueue *&readyQueue);
+
+void removeFirstPCB(PCBQueue *&readyQueue);
+
 void shortestJobFirst(PCBQueue* &readyQueue,MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
                         MemoryTable* &bestFitTable,MemoryTable* &worstFitTable);
 

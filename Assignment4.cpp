@@ -24,11 +24,6 @@ void MemoryBlock::setFreeSpace(bool free)
     this -> freeSpace = free;
 }
 
-void MemoryBlock::setMiddleBlock(bool middle)
-{
-    this -> middleBlock = middle;
-}
-
 void MemoryBlock::setUpPtr(MemoryBlock* up)
 {
     this -> upPtr = up;
@@ -54,11 +49,6 @@ bool MemoryBlock::getFreeSpace()
     return freeSpace;
 }
 
-bool MemoryBlock::getMiddleBlock()
-{
-    return middleBlock;
-}
-
 MemoryBlock* MemoryBlock::getUpPtr()
 {
     return upPtr;
@@ -67,64 +57,6 @@ MemoryBlock* MemoryBlock::getUpPtr()
 MemoryBlock* MemoryBlock::getDownPtr()
 {
     return downPtr;
-}
-
-
-freeSpans::freeSpans(int beginningIndex, int endIndex)
-{
-    this -> beginningIndex = beginningIndex;
-    this -> endIndex = endIndex;
-}
-
-void freeSpans::setBeginningIndex(int beginning)
-{
-    this -> beginningIndex = beginning;
-}
-
-void freeSpans::setEndIndex(int endIndex)
-{
-    this -> endIndex = endIndex;
-}
-
-void freeSpans::setNumOfBlocks(int blocks)
-{
-    this -> numOfBlocks = blocks;
-}
-
-void freeSpans::setMiddleOfSpan(int middle)
-{
-    this -> middleOfSpan = middle;
-}
-
-int freeSpans::getBeginningIndex()
-{
-    return beginningIndex;
-}
-
-int freeSpans::getEndIndex()
-{
-    return endIndex;
-}
-
-int freeSpans::getNumOfBlocks()
-{
-    return numOfBlocks;
-}
-
-int freeSpans::getMiddleOfSpan()
-{
-    return middleOfSpan;
-}
-
-void freeSpans::findNumOfBlocks()
-{
-    numOfBlocks = endIndex - beginningIndex + 1;
-}
-
-void freeSpans::findMiddleOfSpan()
-{
-    findNumOfBlocks();
-    middleOfSpan = numOfBlocks/2;
 }
 
 
@@ -140,7 +72,6 @@ MemoryTable::MemoryTable()
     tailBlockPtr->setUpPtr(headBlockPtr);
     tailBlockPtr->setDownPtr(NULL);
 
-    numOfFreeSpans = 0;
     numOfFreeBlocks = 0;
     sizeOfTable = 1024;
 
@@ -172,11 +103,6 @@ void MemoryTable::setTailBlockPtr(MemoryBlock* tailBlockPtr)
     this -> tailBlockPtr = tailBlockPtr;
 }
 
-void MemoryTable::setNumOfFreeSpans(int numOfFreeSpans)
-{
-    this -> numOfFreeSpans = numOfFreeSpans;
-}
-
 void MemoryTable::setNumOfFreeBlocks(int numOfFreeBlocks)
 {
     this -> numOfFreeBlocks = numOfFreeBlocks;
@@ -192,11 +118,6 @@ MemoryBlock* MemoryTable::getTailBlockPtr()
     return tailBlockPtr;
 }
 
-int MemoryTable::getNumOfFreeSpans()
-{
-    return numOfFreeSpans;
-}
-
 int MemoryTable::getNumOfFreeBlocks()
 {
     return numOfFreeBlocks;
@@ -207,35 +128,6 @@ int MemoryTable::getSizeOfTable()
     return sizeOfTable;
 }
 
-freeSpans* MemoryTable::getFreeSpanByVectorIndex(int i)
-{
-    return freeSpanVector[i];
-}
-
-void MemoryTable::findFreeSpans()
-{
-    int tempBeginning = 0;
-    int tempEnd = 0;
-    MemoryBlock* traversePtr = headBlockPtr->getDownPtr();
-
-    while(traversePtr != tailBlockPtr)
-    {
-        if(traversePtr->getFreeSpace() == true && traversePtr->getUpPtr()->getFreeSpace() == false)
-        {
-            tempBeginning = traversePtr->getIndexNum();
-        }
-        else if(traversePtr->getFreeSpace() == false && traversePtr->getUpPtr()->getFreeSpace() == true)
-        {
-            tempEnd = traversePtr->getUpPtr()->getIndexNum();
-            freeSpans* newSpan =  new freeSpans(tempBeginning,tempEnd);
-            freeSpanVector.push_back(newSpan);
-            tempBeginning = 0;
-            tempEnd = 0;
-        }
-
-        traversePtr = traversePtr->getDownPtr();
-    }
-}
 
 MemoryBlock* MemoryTable::findMemoryBlockByIndex(int i)
 {
@@ -251,84 +143,171 @@ MemoryBlock* MemoryTable::findMemoryBlockByIndex(int i)
     }
 }
 
-void MemoryTable::setMiddleBlocks()
+
+int MemoryTable::findNumOfFreeBlocks()
 {
-    freeSpans* currentSpan = NULL;
-    MemoryBlock* middleBlock = NULL;
-    for(int i = 0; i < freeSpanVector.size();i++)
+    numOfFreeBlocks = 0;
+    MemoryBlock* current = headBlockPtr;
+    while(current != tailBlockPtr)
     {
-        currentSpan = freeSpanVector[i];
-        middleBlock = findMemoryBlockByIndex(currentSpan->getMiddleOfSpan());
-        middleBlock->setMiddleBlock(true);
+        if(current->getFreeSpace() == true)
+            numOfFreeBlocks++;
+        current = current->getDownPtr();
     }
 }
 
+void MemoryTable::removeFromTable(PCBStruct* deleteFromTable)
+{
+    cout << "278" << endl;
+    MemoryBlock* current = headBlockPtr;
+    while(current != tailBlockPtr)
+    {
+        if(current->getProcessName() == deleteFromTable->getProcessName())
+        {
+            current->setProcessName("");
+            current->setFreeSpace(true);
+        }
+        current = current->getDownPtr();
+    }
+}
+
+
 void MemoryTable::showMemoryTable()
 {
-    system("CLS");
+    //system("CLS");
 
     MemoryBlock* traverseBlock = headBlockPtr->getDownPtr();
     while(traverseBlock != tailBlockPtr)
     {
+        if(traverseBlock->getProcessName() == "")
+            return;
         cout << traverseBlock->getIndexNum() << ": " << traverseBlock->getProcessName() << endl;
         traverseBlock = traverseBlock->getDownPtr();
     }
 }
 
-void traverseThroughQueue(PCBQueue* readyQueue)
-{
-    MemoryTable* FirstFitTable = new MemoryTable;
-    MemoryTable* NextFitTable = new MemoryTable;
 
-    PCBStruct* traversePCB = readyQueue->getHeadNodePtr()->getNextPtr();
 
-    while(traversePCB != readyQueue->getTailNodePtr())
-    {
-        firstFit(traversePCB,FirstFitTable);
-    }
-}
-
-bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable)
+bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning)
 {
     int spaceNeeded = newProcess->getMemoryNeeded();
+
+    int sizeOfTable = mainMemoryTable->getSizeOfTable();
     int counter = 0;
     int beginningIndex = 0;
     int endingIndex = 0;
     bool spaceFound = false;
+    bool consecutive = true;
+    mainMemoryTable->findNumOfFreeBlocks();
+    if(spaceNeeded > mainMemoryTable->getNumOfFreeBlocks())
+        return false;
 
-    MemoryBlock* traverseBlock = mainMemoryTable->getHeadBlockPtr()->getDownPtr();
-    while(traverseBlock != mainMemoryTable->getTailBlockPtr() && counter < spaceNeeded)
+    if(beginning > sizeOfTable)
     {
-        if(counter == spaceNeeded)
+        return true;
+    }
+    else
+    {
+        beginningIndex = beginning;
+    }
+    endingIndex = beginning + spaceNeeded;
+    if(endingIndex > sizeOfTable)
+        return true;
+
+    //cout << "Beginning: " << beginningIndex << "\tEnd: " << endingIndex << endl;
+
+    MemoryBlock* startingBlock = mainMemoryTable->getHeadBlockPtr();
+    MemoryBlock* tempStartingBlock = NULL;
+    while(startingBlock->getIndexNum() != beginning+1)
+    {
+        startingBlock = startingBlock->getDownPtr();
+    }
+    tempStartingBlock = startingBlock;
+
+    MemoryBlock* endingBlock = startingBlock;
+    MemoryBlock* tempEndingBlock = NULL;
+    while(endingBlock->getIndexNum() != endingIndex)
+    {
+        endingBlock = endingBlock->getDownPtr();
+    }
+    tempEndingBlock = endingBlock;
+
+    MemoryBlock *current = startingBlock;
+    while(startingBlock != endingBlock)
+    {
+        if(startingBlock->getFreeSpace() != true)
         {
-            freeSpans* newSpan = new freeSpans(beginningIndex,endingIndex);
-            MemoryBlock* current = NULL;
-            for(int i = beginningIndex; i <= endingIndex; i++)
+            firstFit(newProcess,mainMemoryTable,startingBlock->getDownPtr()->getIndexNum());
+        }
+        startingBlock = startingBlock->getDownPtr();
+    }
+
+    if(startingBlock == endingBlock && consecutive == true)
+    {
+        while(tempStartingBlock != tempEndingBlock)
+        {
+            tempStartingBlock->setFreeSpace(false);
+            tempStartingBlock->setProcessName(newProcess->getProcessName());
+            tempStartingBlock = tempStartingBlock->getDownPtr();
+        }
+      //  cout << "process added" << endl;
+        return true;
+    }
+    else
+    {
+        cout << "process not added" << endl;
+        return false;
+    }
+
+
+
+    /*
+    cout << "Beginning: "
+
+    //for(int i = 0; i < sizeOfTable; i++)
+   // {
+        //beginningIndex = sizeOfTable + 1;
+        //endingIndex = sizeOfTable +1;
+        for(int x = beginningIndex; x < sizeOfTable;x++)
+        {
+            if(traverseBlock->getFreeSpace() == true && (traverseBlock->getUpPtr() != mainMemoryTable->getHeadBlockPtr()
+                || traverseBlock != mainMemoryTable->getTailBlockPtr()))
             {
-                current = mainMemoryTable->findMemoryBlockByIndex(i);
-                current->setProcessName(newProcess->getProcessName());
-                current->setFreeSpace(false);
+                counter++;
+                if(beginningIndex > sizeOfTable)
+                {
+                    beginningIndex = x;
+                    counter++;
+                }
+                else if(endingIndex > sizeOfTable && (traverseBlock->getDownPtr() == NULL ||
+                        traverseBlock->getDownPtr()->getFreeSpace() == false))
+                {
+                    if(counter == spaceNeeded)
+                    {
+                        counter++;
+                        endingIndex = beginningIndex + counter;
+                        spaceFound = true;
+                        setBlocks(mainMemoryTable,newProcess,beginningIndex,endingIndex);
+                        return spaceFound;
+                    }
+                }
+                else
+                {
+                    counter++;
+                    if(counter == spaceNeeded)
+                    {
+                        endingIndex = beginningIndex+counter;
+                        spaceFound = true;
+                        setBlocks(mainMemoryTable,newProcess,beginningIndex,endingIndex);
+                        return spaceFound;
+                    }
+                }
+                traverseBlock = traverseBlock->getDownPtr();
             }
-            spaceFound = true;
-            return spaceFound;
         }
-        if(traverseBlock->getUpPtr()->getFreeSpace() == false && traverseBlock->getFreeSpace() == true)
-        {
-            beginningIndex = traverseBlock->getIndexNum();
-            counter++;
-        }
-        else if(traverseBlock->getDownPtr()->getFreeSpace() == false && traverseBlock->getFreeSpace() == true)
-        {
-            endingIndex = traverseBlock->getIndexNum();
-            counter++;
-        }
-        traverseBlock = traverseBlock->getDownPtr();
-    }
+    //}
 
-    if(traverseBlock == mainMemoryTable->getTailBlockPtr() && spaceFound)
-    {
-        return spaceFound;
-    }
+*/
 }
 
 bool nextFit(PCBStruct* newProcess, MemoryTable* &mainMemoryTable)
@@ -344,13 +323,13 @@ bool nextFit(PCBStruct* newProcess, MemoryTable* &mainMemoryTable)
     {
         if(counter == memoryNeeded)
         {
-            freeSpans* newSpan = new freeSpans(beginningIndex,endingIndex);
             MemoryBlock* current = NULL;
             for(int i = beginningIndex; i <= endingIndex; i++)
             {
                 current = mainMemoryTable->findMemoryBlockByIndex(i);
                 current->setProcessName(newProcess->getProcessName());
                 current->setFreeSpace(false);
+                cout << current->getProcessName() << endl;
             }
             processAdded = true;
             return processAdded;
@@ -373,16 +352,17 @@ bool nextFit(PCBStruct* newProcess, MemoryTable* &mainMemoryTable)
         }
         traverseBlock = traverseBlock->getDownPtr();
     }
+
 }
 
 
-void sendToFile(string fileName, MemoryTable* mainMemoryTable)
+void PrintTable(string fileName,MemoryTable* mainMemoryTable)
 {
     ofstream oFile;
     oFile.open(fileName.c_str());
 
     MemoryBlock* traverseBlock = mainMemoryTable->getHeadBlockPtr()->getDownPtr();
-    while(traverseBlock != mainMemoryTable->getTailBlockPtr())
+    for(int i = 0; i < mainMemoryTable->getSizeOfTable();i++)
     {
         oFile << traverseBlock->getIndexNum() << ": " << traverseBlock->getProcessName() << endl;
         oFile << "____________________________________________________________________" << endl;

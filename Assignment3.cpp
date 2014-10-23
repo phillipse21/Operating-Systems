@@ -1,5 +1,26 @@
 #include "libraries.h"
 
+void decrementTime(PCBQueue *&readyQueue)
+{
+    int timeChanging = readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining();
+    timeChanging--;
+    readyQueue->getHeadNodePtr()->getNextPtr()->setTimeRemaining(timeChanging);
+    Sleep(1000);
+}
+
+void removeFirstPCB(PCBQueue *&readyQueue)
+{
+    PCBStruct* newFirst = readyQueue->getHeadNodePtr()->getNextPtr()->getNextPtr();
+
+    readyQueue->getHeadNodePtr()->getNextPtr()->setNextPtr(NULL);
+    readyQueue->getHeadNodePtr()->getNextPtr()->setPrevPtr(NULL);
+
+    newFirst->setPrevPtr(readyQueue->getHeadNodePtr());
+    readyQueue->getHeadNodePtr()->setNextPtr(newFirst);
+}
+
+
+
 void shortestJobFirst(PCBQueue* &readyQueue,
                       MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
                       MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
@@ -8,12 +29,12 @@ void shortestJobFirst(PCBQueue* &readyQueue,
     string line = "";
     vector <string> fileData;
 
-//    cout << "Please enter a file name: ";
-  //  cin >> fileName;
+    cout << "Please enter a file name: ";
+    cin >> fileName;
 
     ifstream iFile;
-    iFile.open("sampleProcesses.txt");
-    //iFile.open(fileName.c_str());
+  //  iFile.open("sampleProcesses.txt");
+    iFile.open(fileName.c_str());
 
     if (iFile.fail())
     {
@@ -262,6 +283,7 @@ void ReadytoRunning(PCBQueue* &readyQueue)
 
 void printWithTimeRemaining(PCBQueue* readyQueue)
 {
+
     system("CLS");
     PCBStruct* traversePtr = readyQueue->getHeadNodePtr();
     while(traversePtr != readyQueue->getTailNodePtr())
@@ -295,12 +317,12 @@ void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
 
     string fileName = "";
 
-//    cout << "Please enter a file name: ";
-  //  cin >> fileName;
+    cout << "Please enter a file name: ";
+    cin >> fileName;
 
     ifstream iFile;
-    iFile.open("sampleProcesses.txt");
-    //iFile.open(fileName.c_str());
+//    iFile.open("sampleProcesses.txt");
+    iFile.open(fileName.c_str());
 
     if (iFile.fail())
     {
@@ -436,6 +458,7 @@ void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
             enterSecond = timeInfo->tm_sec;
 
             readyQueue->addToEnd(newPCB);
+            PrintTable("FirstFit.txt",FirstFitTable);
          }//end of while loop
 
         while(readyQueue->getHeadNodePtr()->getNextPtr() != readyQueue->getTailNodePtr())
@@ -449,13 +472,8 @@ void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
                 oFile << readyQueue->getHeadNodePtr()->getNextPtr()->getProcessName()
                       << " was completed at "
                       << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
-                PCBStruct* newFirst = readyQueue->getHeadNodePtr()->getNextPtr()->getNextPtr();
 
-                readyQueue->getHeadNodePtr()->getNextPtr()->setNextPtr(NULL);
-                readyQueue->getHeadNodePtr()->getNextPtr()->setPrevPtr(NULL);
-
-                newFirst->setPrevPtr(readyQueue->getHeadNodePtr());
-                readyQueue->getHeadNodePtr()->setNextPtr(newFirst);
+                removeFirstPCB(readyQueue);
             }
         }
     }
@@ -484,12 +502,12 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
 
     string fileName = "";
 
-//    cout << "Please enter a file name: ";
-  //  cin >> fileName;
+    cout << "Please enter a file name: ";
+    cin >> fileName;
 
     ifstream iFile;
-    iFile.open("sampleProcesses.txt");
-    //iFile.open(fileName.c_str());
+//    iFile.open("sampleProcesses.txt");
+    iFile.open(fileName.c_str());
 
     if (iFile.fail())
     {
@@ -610,45 +628,14 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
             oFile << newPCB->getProcessName() << " entered system at: "
                   << enterHour << ":" << enterMinute << ":" << enterSecond << endl;
 
-            bool firstFitPlaced = false;
-            firstFitPlaced = firstFit(newPCB,FirstFitTable);
-            if(firstFitPlaced == false)
-            {
-                while(firstFitPlaced = false)
-                {
-                    timeChanging = readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining();
-                    timeChanging--;
-                    readyQueue->getHeadNodePtr()->getNextPtr()->setTimeRemaining(timeChanging);
-                    Sleep(1000);
 
-                    //if process is finished
-                    if(readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining() == 0)
-                    {
-                        oFile << readyQueue->getHeadNodePtr()->getNextPtr()->getProcessName()
-                              << " was completed at "
-                              << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
-                        PCBStruct* newFirst = readyQueue->getHeadNodePtr()->getNextPtr()->getNextPtr();
-
-                        readyQueue->getHeadNodePtr()->getNextPtr()->setNextPtr(NULL);
-                        readyQueue->getHeadNodePtr()->getNextPtr()->setPrevPtr(NULL);
-
-                        newFirst->setPrevPtr(readyQueue->getHeadNodePtr());
-                        readyQueue->getHeadNodePtr()->setNextPtr(newFirst);
-                    }
-                    firstFitPlaced = firstFit(newPCB,FirstFitTable);
-                }
-            }
-
-            bool nextFitPlaced = false;
+            /*bool nextFitPlaced = false;
             nextFitPlaced = nextFit(newPCB,NextFitTable);
             if(nextFitPlaced == false)
             {
                 while(nextFitPlaced = false)
                 {
-                    timeChanging = readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining();
-                    timeChanging--;
-                    readyQueue->getHeadNodePtr()->getNextPtr()->setTimeRemaining(timeChanging);
-                    Sleep(1000);
+                    decrementTime(readyQueue);
 
                     //if process is finished
                     if(readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining() == 0)
@@ -656,17 +643,13 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
                         oFile << readyQueue->getHeadNodePtr()->getNextPtr()->getProcessName()
                               << " was completed at "
                               << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
-                        PCBStruct* newFirst = readyQueue->getHeadNodePtr()->getNextPtr()->getNextPtr();
 
-                        readyQueue->getHeadNodePtr()->getNextPtr()->setNextPtr(NULL);
-                        readyQueue->getHeadNodePtr()->getNextPtr()->setPrevPtr(NULL);
-
-                        newFirst->setPrevPtr(readyQueue->getHeadNodePtr());
-                        readyQueue->getHeadNodePtr()->setNextPtr(newFirst);
+                        removeFirstPCB(readyQueue);
                     }
-                    nextFitPlaced = nextFit(newPCB,nextFitTable);
+                    nextFitPlaced = nextFit(newPCB,NextFitTable);
+                   //sendToFile("NextFit.txt",NextFitTable);
                 }
-            }
+            }*/
 
             bool bestFitPlaced = false;
 
@@ -688,11 +671,38 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
 
             whereToAddSTCF(readyQueue,newPCB,oFile,timeInfo,initialTime);
 
+            bool firstFitPlaced = true;
+            if(newPCB->getMemoryNeeded() != 0)
+            {
+                firstFitPlaced = firstFit(newPCB,FirstFitTable,0);
+                if(firstFitPlaced == false)
+                {
+                    cout << "false";
+                    while(firstFitPlaced = false)
+                    {
+                        decrementTime(readyQueue);
+
+                        //if process is finished
+                        if(readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining() == 0)
+                        {
+                            oFile << readyQueue->getHeadNodePtr()->getNextPtr()->getProcessName()
+                                << " was completed at "
+                                << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
+
+                            removeFirstPCB(readyQueue);
+                            FirstFitTable->removeFromTable(readyQueue->getHeadNodePtr()->getNextPtr());
+                            firstFitPlaced = firstFit(newPCB,FirstFitTable,0);
+                            FirstFitTable->showMemoryTable();
+                        }
+                    }
+                    FirstFitTable->removeFromTable(readyQueue->getHeadNodePtr()->getNextPtr());
+
+                    FirstFitTable->showMemoryTable();
+                }
+            }
+
             //changing timeRemaining of firstProcess
-            timeChanging = readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining();
-            timeChanging--;
-            readyQueue->getHeadNodePtr()->getNextPtr()->setTimeRemaining(timeChanging);
-            Sleep(1000);
+            decrementTime(readyQueue);
 
             //if process is finished
             if(readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining() == 0)
@@ -700,13 +710,10 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
                 oFile << readyQueue->getHeadNodePtr()->getNextPtr()->getProcessName()
                       << " was completed at "
                       << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
-                PCBStruct* newFirst = readyQueue->getHeadNodePtr()->getNextPtr()->getNextPtr();
 
-                readyQueue->getHeadNodePtr()->getNextPtr()->setNextPtr(NULL);
-                readyQueue->getHeadNodePtr()->getNextPtr()->setPrevPtr(NULL);
+                removeFirstPCB(readyQueue);
+                FirstFitTable->removeFromTable(readyQueue->getHeadNodePtr()->getNextPtr());
 
-                newFirst->setPrevPtr(readyQueue->getHeadNodePtr());
-                readyQueue->getHeadNodePtr()->setNextPtr(newFirst);
             }
 
             printWithTimeRemaining(readyQueue);
@@ -798,12 +805,12 @@ void fixedPriorityPreEmptiveScheduling(PCBQueue* readyQueue,tm * &timeInfo, time
 
     string fileName = "";
 
-//    cout << "Please enter a file name: ";
-  //  cin >> fileName;
+    cout << "Please enter a file name: ";
+    cin >> fileName;
 
     ifstream iFile;
-    iFile.open("sampleProcesses.txt");
-    //iFile.open(fileName.c_str());
+    //iFile.open("sampleProcesses.txt");
+    iFile.open(fileName.c_str());
 
     if (iFile.fail())
     {
@@ -941,10 +948,7 @@ void fixedPriorityPreEmptiveScheduling(PCBQueue* readyQueue,tm * &timeInfo, time
             whereToAddFPPS(readyQueue,newPCB,oFile,timeInfo,initialTime);
 
             //changing timeRemaining of firstProcess
-            timeChanging = readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining();
-            timeChanging--;
-            readyQueue->getHeadNodePtr()->getNextPtr()->setTimeRemaining(timeChanging);
-            Sleep(1000);
+            decrementTime(readyQueue);
 
             //if process is finished
             if(readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining() == 0)
@@ -952,13 +956,8 @@ void fixedPriorityPreEmptiveScheduling(PCBQueue* readyQueue,tm * &timeInfo, time
                 oFile << readyQueue->getHeadNodePtr()->getNextPtr()->getProcessName()
                       << " was completed at "
                       << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
-                PCBStruct* newFirst = readyQueue->getHeadNodePtr()->getNextPtr()->getNextPtr();
 
-                readyQueue->getHeadNodePtr()->getNextPtr()->setNextPtr(NULL);
-                readyQueue->getHeadNodePtr()->getNextPtr()->setPrevPtr(NULL);
-
-                newFirst->setPrevPtr(readyQueue->getHeadNodePtr());
-                readyQueue->getHeadNodePtr()->setNextPtr(newFirst);
+                removeFirstPCB(readyQueue);
             }
 
             printWithTimeRemaining(readyQueue);

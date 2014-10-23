@@ -82,15 +82,18 @@ int main()
             }
             case(8)://RR
             {
+                //
                 break;
             }
             case(9)://MLFQ
             {
                 //
+                break;
             }
             case(10)://LS
             {
                 //
+                break;
             }
             case(11)://suspend
             {
@@ -119,11 +122,11 @@ int main()
             }
             case(16)://show ready
             {
-                showBlocked(readyQueue);
+                showOneQueue(readyQueue);
             }
             case(17)://show blocked
             {
-                showBlocked(blockedQueue);
+                showOneQueue(blockedQueue);
                 break;
             }
             case(18):

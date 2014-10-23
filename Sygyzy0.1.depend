@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1410490624 source:c:\users\ashley\documents\data structures\sygyzy0.1\assignment1.cpp
+	"libraries.h"
+
+1410490616 c:\users\ashley\documents\data structures\sygyzy0.1\libraries.h
+	<string>
+	<ctime>
+	<cstdlib>
+	<vector>
+	<iostream>
+	<fstream>
+	<time.h>
+	<stdio.h>
+	<dirent.h>
+	"Assignment1.h"
+	"Assignment2.h"
+
+1410482432 c:\users\ashley\documents\data structures\sygyzy0.1\assignment1.h
+	"libraries.h"
+
+1410482432 source:c:\users\ashley\documents\data structures\sygyzy0.1\main.cpp
+	"libraries.h"
+
+1410516543 c:\users\ashley\documents\data structures\sygyzy0.1\assignment2.h
+	"libraries.h"
+

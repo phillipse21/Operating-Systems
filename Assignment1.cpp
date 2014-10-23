@@ -116,9 +116,6 @@ void printWelcomeScreen()
 //print opening menu
 int printOpeningMenu(timeAndDate clock)
 {
-    //printTime(clock);
-
-    //system("CLS");
     int userChoice = 0;
 
     cout << "Select an option below by entering the corresponding number" << endl
@@ -132,20 +129,20 @@ int printOpeningMenu(timeAndDate clock)
          << "8 - Round-Robin Scheduling" << endl
          << "9 - Multilevel Feedback Queue" << endl
          << "10 - Lottery Scheduling" << endl
-       //  << "4 - Suspend" << endl
-        // << "5 - Resume" << endl
-        // << "6 - Set priority" << endl
-      //   << "7 - Show PCB" << endl
-    //     << "8 - Show all" << endl
-  //       << "9 - Show ready" << endl
-//         << "10 - Show blocked" << endl
-         << "11 - Help" << endl
-         << "12 - Exit" << endl;
+         << "11 - Suspend" << endl
+         << "12 - Resume" << endl
+         << "13 - Set priority" << endl
+         << "14 - Show PCB" << endl
+         << "15 - Show all" << endl
+         << "16 - Show ready" << endl
+         << "17 - Show blocked" << endl
+         << "18 - Help" << endl
+         << "19 - Exit" << endl;
     cin >> userChoice;
 
     if(userChoice < 1 || userChoice > 12)
     {
-        cout << "Error 016: Please select 1,2,3,4,5,6,7,8,9,10,11,12" << endl;
+        cout << "Error 016: Please select a number between 1-19" << endl;
         printOpeningMenu(clock);
     }
     else

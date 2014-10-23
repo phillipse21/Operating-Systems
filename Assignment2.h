@@ -69,28 +69,28 @@ class PCBQueue
 
 
 //find PCB before tailnode
-PCBStruct* findLastPCB(PCBStruct *headNode, PCBStruct *tailNode);
+//PCBStruct* findLastPCB(PCBStruct *headNode, PCBStruct *tailNode);
 
 //add new node to headnode
-void addToBeginningOfList(PCBStruct *&headNode, PCBStruct *&tailNode);
+//void addToBeginningOfList(PCBStruct *&headNode, PCBStruct *&tailNode);
 
 //add new node to headnode
-void addToBeginningOfList(PCBStruct *&headNode, PCBStruct *&tailNode);
+//void addToBeginningOfList(PCBStruct *&headNode, PCBStruct *&tailNode);
 
 //create new node & returns pointer to new PCB
-PCBStruct* allocatePCB();
+//PCBStruct* allocatePCB();
 
 //Frees all memory associated with a PCB
-void freePCB(PCBStruct* nodeTODelete);
+//void freePCB(PCBStruct* nodeTODelete);
 
 //SetupPCB
-void  setupPCB(string name,int priority,char appOrSystem,PCBQueue* blocked, PCBQueue* ready);
+//void  setupPCB(string name,int priority,char appOrSystem,PCBQueue* blocked, PCBQueue* ready);
 
 //searches all queues for PCB with a given name
 PCBStruct* findSameName(PCBQueue* blocked, PCBQueue* ready, string name);
 
 //inserts the given PCB pointer to the specified queue
-void insertPCB(PCBQueue* &blocked, PCBQueue* &ready, PCBStruct* newPCB);
+//void insertPCB(PCBQueue* &blocked, PCBQueue* &ready, PCBStruct* newPCB);
 
 //allocates and sets up a new PCB and inserts it into the ready queue
 //void createPCB(PCBQueue* &ready,PCBQueue* &blocked);
@@ -122,9 +122,9 @@ void showPCB(PCBQueue* blocked,PCBQueue* ready);
 void showAll(PCBQueue* blocked,PCBQueue* ready);
 
 //shows all PCBs in ready queue
-void showReady(PCBQueue* ready);
+//void showReady(PCBQueue* ready);
 
 //shows all PCBs in blocked queue
-void showBlocked(PCBQueue* queueToPrint);
+void showOneQueue(PCBQueue* queueToPrint);
 
 #endif // Assignment2_H
