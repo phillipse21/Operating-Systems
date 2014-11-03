@@ -19,7 +19,9 @@ using namespace std;
 
 #include "Assignment1.h"
 #include "Assignment2.h"
+#include "new4.h"
 #include "Assignment4.h"
+
 #include "Assignment3.h"
 
 

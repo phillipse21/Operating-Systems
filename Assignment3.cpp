@@ -20,10 +20,9 @@ void removeFirstPCB(PCBQueue *&readyQueue)
 }
 
 
-
-void shortestJobFirst(PCBQueue* &readyQueue,
-                      MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
-                      MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
+void shortestJobFirst(PCBQueue* &readyQueue,vector <string> memoryTable)
+                    //  MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
+                    //  MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
 {
     string fileName = "";
     string line = "";
@@ -51,13 +50,13 @@ void shortestJobFirst(PCBQueue* &readyQueue,
         iFile.close();
     }
 
-    fileDataToPCB(readyQueue,fileData,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
+    fileDataToPCB(readyQueue,fileData,memoryTable);//,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
 
 }
 
-void fileDataToPCB(PCBQueue* &readyQueue, vector <string> fileData,
-                   MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
-                   MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
+void fileDataToPCB(PCBQueue* &readyQueue, vector <string> fileData,vector <string> memoryTable)
+                   //MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
+                   //MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
 {
     ofstream oFile;
     oFile.open("text.txt");
@@ -206,7 +205,7 @@ void fileDataToPCB(PCBQueue* &readyQueue, vector <string> fileData,
     cout << endl << endl << endl;
     getchar();
 
-    ReadytoRunning(readyQueue);
+    ReadytoRunning(readyQueue,memoryTable);//,FirstFitTable);
 }
 
 void intTimeRemaining(vector <int> &timeRemainingVector)
@@ -255,7 +254,7 @@ void orderedInsert(PCBQueue* &readyQueue, PCBStruct* &newPCB)
     }
 }
 
-void ReadytoRunning(PCBQueue* &readyQueue)
+void ReadytoRunning(PCBQueue *readyQueue,vector <string> memoryTable)//MemoryTable *&mainMemoryTable)
 {
     PCBStruct* traversePtr = readyQueue->getHeadNodePtr()->getNextPtr();
     PCBStruct* nextPtr = NULL;
@@ -283,9 +282,8 @@ void ReadytoRunning(PCBQueue* &readyQueue)
 
 void printWithTimeRemaining(PCBQueue* readyQueue)
 {
-
     system("CLS");
-    PCBStruct* traversePtr = readyQueue->getHeadNodePtr();
+    PCBStruct* traversePtr = readyQueue->getHeadNodePtr()->getNextPtr();
     while(traversePtr != readyQueue->getTailNodePtr())
     {
         cout << traversePtr->getProcessName() << ": "
@@ -295,8 +293,9 @@ void printWithTimeRemaining(PCBQueue* readyQueue)
 }
 
 void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
-                     MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
-                    MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
+                     vector <string> &memoryTable,vector <Spans*> &spanVector)
+                     //MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
+                    //MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
 {
     ofstream oFile;
     oFile.open("FIFO.txt");
@@ -314,15 +313,16 @@ void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
     time_t enterMinute;
     time_t enterSecond;
     int timeChanging = 0;
+    bool processAdded = false;
 
     string fileName = "";
 
-    cout << "Please enter a file name: ";
-    cin >> fileName;
+  //  cout << "Please enter a file name: ";
+   // cin >> fileName;
 
     ifstream iFile;
-//    iFile.open("sampleProcesses.txt");
-    iFile.open(fileName.c_str());
+    iFile.open("sampleProcesses.txt");
+//    iFile.open(fileName.c_str());
 
     if (iFile.fail())
     {
@@ -458,13 +458,20 @@ void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
             enterSecond = timeInfo->tm_sec;
 
             readyQueue->addToEnd(newPCB);
-            PrintTable("FirstFit.txt",FirstFitTable);
+            findSpans(memoryTable,spanVector);
+            firstFit(newPCB,memoryTable,spanVector);
+            showMemoryTable(newPCB,memoryTable,spanVector);
+            //firstFit(newPCB,FirstFitTable,0);
+//            PrintTable("FirstFit.txt",FirstFitTable);
          }//end of while loop
 
         while(readyQueue->getHeadNodePtr()->getNextPtr() != readyQueue->getTailNodePtr())
         {
-            ReadytoRunning(readyQueue);
-            printWithTimeRemaining(readyQueue);
+            //processAdded = firstFit(readyQueue->getHeadNodePtr()->getNextPtr(),FirstFitTable,0);
+            ReadytoRunning(readyQueue,memoryTable);//,FirstFitTable);
+          //  printWithTimeRemaining(readyQueue);
+           // printWithTimeRemainingAndTable(readyQueue,FirstFitTable);
+       //     FirstFitTable->showMemoryTable();
 
             //if process is finished
             if(readyQueue->getHeadNodePtr()->getNextPtr()->getTimeRemaining() == 0)
@@ -474,14 +481,16 @@ void firstInFirstOut(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
                       << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
 
                 removeFirstPCB(readyQueue);
+              //  removeProcessFromTable(readyQueue->getHeadNodePtr()->getNextPtr(), FirstFitTable);
             }
         }
     }
 }
 
 void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t initialTime,
-                                   MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
-                                   MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
+                                    vector <string> memoryTable)
+                                   //MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
+                                   //MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
 {
     ofstream oFile;
     oFile.open("STCF.txt");
@@ -671,10 +680,10 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
 
             whereToAddSTCF(readyQueue,newPCB,oFile,timeInfo,initialTime);
 
-            bool firstFitPlaced = true;
+         /*   bool firstFitPlaced = true;
             if(newPCB->getMemoryNeeded() != 0)
             {
-                firstFitPlaced = firstFit(newPCB,FirstFitTable,0);
+//                firstFitPlaced = firstFit(newPCB,FirstFitTable,0);
                 if(firstFitPlaced == false)
                 {
                     cout << "false";
@@ -699,7 +708,7 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
 
                     FirstFitTable->showMemoryTable();
                 }
-            }
+            }*/
 
             //changing timeRemaining of firstProcess
             decrementTime(readyQueue);
@@ -712,17 +721,17 @@ void shortestTimeToCompletionFirst(PCBQueue* readyQueue,tm * &timeInfo,time_t in
                       << timeInfo->tm_hour << ":" << timeInfo->tm_min << ":" << timeInfo->tm_sec << endl;
 
                 removeFirstPCB(readyQueue);
-                FirstFitTable->removeFromTable(readyQueue->getHeadNodePtr()->getNextPtr());
+//                FirstFitTable->removeFromTable(readyQueue->getHeadNodePtr()->getNextPtr());
 
             }
 
-            printWithTimeRemaining(readyQueue);
+//            printWithTimeRemaining(readyQueue,FirstFitTable);
          }//end of while loop
 
         while(readyQueue->getHeadNodePtr()->getNextPtr() != readyQueue->getTailNodePtr())
         {
-            ReadytoRunning(readyQueue);
-            printWithTimeRemaining(readyQueue);
+            ReadytoRunning(readyQueue,memoryTable);//,FirstFitTable);
+//            printWithTimeRemaining(readyQueue);
         }
     }
 }
@@ -782,9 +791,9 @@ void whereToAddSTCF(PCBQueue* &readyQueue, PCBStruct* newPCB,ofstream &oFile,tm 
     }
 }
 
-void fixedPriorityPreEmptiveScheduling(PCBQueue* readyQueue,tm * &timeInfo, time_t initialTime,
-                                       MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
-                                       MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
+void fixedPriorityPreEmptiveScheduling(PCBQueue* &readyQueue,tm * &timeInfo, time_t initialTime, vector <string> memoryTable)
+                                      // MemoryTable* &FirstFitTable,MemoryTable*&NextFitTable,
+                                      // MemoryTable* &bestFitTable,MemoryTable* &worstFitTable)
 {
     ofstream oFile;
     oFile.open("FPPS.txt");
@@ -960,13 +969,13 @@ void fixedPriorityPreEmptiveScheduling(PCBQueue* readyQueue,tm * &timeInfo, time
                 removeFirstPCB(readyQueue);
             }
 
-            printWithTimeRemaining(readyQueue);
+//            printWithTimeRemaining(readyQueue);
          }//end of while loop
 
         while(readyQueue->getHeadNodePtr()->getNextPtr() != readyQueue->getTailNodePtr())
         {
-            ReadytoRunning(readyQueue);
-            printWithTimeRemaining(readyQueue);
+            ReadytoRunning(readyQueue,memoryTable);//,FirstFitTable);
+//            printWithTimeRemaining(readyQueue);
         }
     }
 }

@@ -1,5 +1,5 @@
-#include "libraries.h"
-
+/*#include "libraries.h"
+/*
 MemoryBlock::MemoryBlock()
 {
     indexNum = -1;
@@ -175,17 +175,107 @@ void MemoryTable::removeFromTable(PCBStruct* deleteFromTable)
 void MemoryTable::showMemoryTable()
 {
     //system("CLS");
+    int beginning = 1;
+    int ending = -1;
 
     MemoryBlock* traverseBlock = headBlockPtr->getDownPtr();
     while(traverseBlock != tailBlockPtr)
     {
         if(traverseBlock->getProcessName() == "")
             return;
-        cout << traverseBlock->getIndexNum() << ": " << traverseBlock->getProcessName() << endl;
+        if(traverseBlock->getFreeSpace() == true)
+        {
+            if(traverseBlock->getUpPtr() != NULL)
+            {
+                if(traverseBlock->getUpPtr()->getFreeSpace() == false)
+                    beginning = traverseBlock->getIndexNum();
+            }
+
+            if(traverseBlock->getDownPtr() != NULL)
+            {
+                if(traverseBlock->getDownPtr()->getFreeSpace() == false)
+                    ending = traverseBlock->getIndexNum();
+            }
+
+            cout << beginning << "-" << ending << ": " << traverseBlock->getProcessName()<<endl;
+        }
         traverseBlock = traverseBlock->getDownPtr();
     }
 }
 
+
+
+void removeProcessFromTable(PCBStruct* processToDelete,MemoryTable *&mainMemoryTable)
+{
+    MemoryBlock* traversePCB = mainMemoryTable->getHeadBlockPtr()->getDownPtr();
+    while(traversePCB != mainMemoryTable->getTailBlockPtr())
+    {
+        if(traversePCB->getProcessName() == processToDelete->getProcessName())
+        {
+            traversePCB->setProcessName(" ");
+            traversePCB->setFreeSpace(true);
+        }
+        traversePCB = traversePCB->getDownPtr();
+    }
+}
+
+void printWithTimeRemainingAndTable(PCBQueue *&readyQueue, MemoryTable *mainMemoryTable)
+{
+    system("CLS");
+
+    int counter = 0;
+    int beginning = 1;
+    int ending = -1;
+    vector <int> beginningEnding;
+    beginningEnding.push_back(1);
+
+    MemoryBlock* traverseBlock = mainMemoryTable->getHeadBlockPtr()->getDownPtr();
+    while(traverseBlock != mainMemoryTable->getTailBlockPtr())
+    {
+        if(traverseBlock->getProcessName() == "")
+            return;
+        if(traverseBlock->getFreeSpace() == true)
+        {
+            if(traverseBlock->getUpPtr() != NULL)
+            {
+                if(traverseBlock->getUpPtr()->getFreeSpace() == false)
+                    beginning = traverseBlock->getIndexNum();
+                    beginningEnding.push_back(beginning);
+            }
+
+            if(traverseBlock->getDownPtr() != NULL)
+            {
+                if(traverseBlock->getDownPtr()->getFreeSpace() == false)
+                    ending = traverseBlock->getIndexNum();
+                    beginningEnding.push_back(ending);
+            }
+            else if(traverseBlock->getDownPtr() == NULL)
+            {
+                ending = mainMemoryTable->getSizeOfTable();
+                beginningEnding.push_back(ending);
+            }
+
+            cout << beginning << "-" << ending << ": " << traverseBlock->getProcessName()<<endl;
+        }
+        traverseBlock = traverseBlock->getDownPtr();
+    }
+
+    PCBStruct* traversePtr = readyQueue->getHeadNodePtr()->getNextPtr();
+    while(traversePtr != readyQueue->getTailNodePtr())
+    {
+        cout << traversePtr->getProcessName() << ": "
+             << traversePtr->getTimeRemaining();
+
+        if(counter < signed(beginningEnding.size()))
+        {
+            cout << beginningEnding[counter] << "-";
+            counter++;
+            cout << beginningEnding[counter] << ": " << traverseBlock->getProcessName() << endl;
+            counter++;
+        }
+        traversePtr = traversePtr->getNextPtr();
+    }
+}
 
 
 bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning)
@@ -204,7 +294,9 @@ bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning
 
     if(beginning > sizeOfTable)
     {
-        return true;
+        beginning--;
+        firstFit(newProcess,mainMemoryTable,beginning);
+        return false;
     }
     else
     {
@@ -212,9 +304,11 @@ bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning
     }
     endingIndex = beginning + spaceNeeded;
     if(endingIndex > sizeOfTable)
-        return true;
+    {
+        return false;
+    }
 
-    //cout << "Beginning: " << beginningIndex << "\tEnd: " << endingIndex << endl;
+    cout << "Beginning: " << beginningIndex << "\tEnd: " << endingIndex << endl;
 
     MemoryBlock* startingBlock = mainMemoryTable->getHeadBlockPtr();
     MemoryBlock* tempStartingBlock = NULL;
@@ -250,7 +344,7 @@ bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning
             tempStartingBlock->setProcessName(newProcess->getProcessName());
             tempStartingBlock = tempStartingBlock->getDownPtr();
         }
-      //  cout << "process added" << endl;
+        cout << "process added" << endl;
         return true;
     }
     else
@@ -258,9 +352,6 @@ bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning
         cout << "process not added" << endl;
         return false;
     }
-
-
-
     /*
     cout << "Beginning: "
 
@@ -307,7 +398,7 @@ bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning
         }
     //}
 
-*/
+
 }
 
 bool nextFit(PCBStruct* newProcess, MemoryTable* &mainMemoryTable)
@@ -366,6 +457,11 @@ void PrintTable(string fileName,MemoryTable* mainMemoryTable)
     {
         oFile << traverseBlock->getIndexNum() << ": " << traverseBlock->getProcessName() << endl;
         oFile << "____________________________________________________________________" << endl;
+
+     //   cout << traverseBlock->getIndexNum() << ": " << traverseBlock->getProcessName() << endl;
+     //   cout << "____________________________________________________________________" << endl;
+
         traverseBlock = traverseBlock->getDownPtr();
     }
 }
+*/

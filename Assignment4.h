@@ -1,8 +1,9 @@
+/*
 #ifndef Assignment4_H
 #define Assignment4_H
 
 #include "libraries.h"
-
+/*
 class MemoryBlock
 {
     public:
@@ -48,7 +49,22 @@ private:
     int numOfFreeBlocks;
     int sizeOfTable;
 };
+*/
+/*
+class Spans
+{
+    public:
+        Spans(int beginning, int ending);
+        int getBeginning();
+        int getEnding();
+    private:
+        int beginning;
+        int ending;
+};
 
+void removeProcessFromTable(PCBStruct* processToDelete,MemoryTable *&mainMemoryTable);
+
+void printWithTimeRemainingAndTable(PCBQueue *&readyQueue, MemoryTable *mainMemoryTable);
 
 bool firstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable,int beginning);
 
@@ -61,3 +77,5 @@ bool worstFit(PCBStruct* newProcess, MemoryTable *&mainMemoryTable);
 void PrintTable(string fileName,MemoryTable* mainMemoryTable);
 
 #endif
+
+*/

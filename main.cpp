@@ -6,6 +6,9 @@ int main()
 {
     bool endProgram = false;
     int userChoice = 0;
+    vector <string> memoryTable;
+    vector <Spans*> spanTable;
+    initializeMemoryTable(memoryTable);
 
     time_t initialTime;
     struct tm * timeInfo;
@@ -30,10 +33,10 @@ int main()
     programClock.setMonth(programClock.getMonth()+1);
     programClock.setYear(programClock.getYear()+1900);
 
-    MemoryTable* FirstFitTable = new MemoryTable;
-    MemoryTable* NextFitTable = new MemoryTable;
-    MemoryTable* bestFitTable = new MemoryTable;
-    MemoryTable* worstFitTable = new MemoryTable;
+//    MemoryTable* FirstFitTable = new MemoryTable;
+  //  MemoryTable* NextFitTable = new MemoryTable;
+   // MemoryTable* bestFitTable = new MemoryTable;
+   // MemoryTable* worstFitTable = new MemoryTable;
 
     while(endProgram == false)
     {
@@ -61,23 +64,23 @@ int main()
             }
             case(4)://SJF
             {
-                shortestJobFirst(readyQueue,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
+                shortestJobFirst(readyQueue,memoryTable);//,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
 //                createPCB(readyQueue,blockedQueue);
                 break;
             }
             case(5)://FIFO
             {
-                firstInFirstOut(readyQueue,timeInfo,initialTime,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
+                firstInFirstOut(readyQueue,timeInfo,initialTime,memoryTable,spanTable);//FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
                 break;
             }
             case(6)://STCF
             {
-                shortestTimeToCompletionFirst(readyQueue,timeInfo,initialTime,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
+                shortestTimeToCompletionFirst(readyQueue,timeInfo,initialTime,memoryTable);//,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
                 break;
             }
             case(7)://FPPS
             {
-                fixedPriorityPreEmptiveScheduling(readyQueue,timeInfo,initialTime,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
+                fixedPriorityPreEmptiveScheduling(readyQueue,timeInfo,initialTime,memoryTable);//,FirstFitTable,NextFitTable,bestFitTable,worstFitTable);
                 break;
             }
             case(8)://RR
